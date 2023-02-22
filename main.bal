@@ -1,13 +1,18 @@
 import ballerinax/mysql.driver as _;
 import ballerina/sql;
 import ballerinax/mysql;
+import ballerina/io;
 import ballerina/http;
-// import ballerina/io;
 
 type Catelog record {
     int item_id;
     string title;
     string desc;
+    string includes;
+    string intended_for;
+    string color;
+    string material;
+    string img_url;
     decimal unit_price;
 };
 
@@ -46,7 +51,7 @@ type Card record {
 };
 
 
-service / on new http:Listener(9000) {
+service /petstore on new http:Listener(8888) {
     private final mysql:Client db;
 
     function init() returns error? {
@@ -56,13 +61,16 @@ service / on new http:Listener(9000) {
     }
 
     // function get catalog() from the catalog table and return json
-    resource function get catalog() returns json|error {
-        // Execute the query and get the result as a stream.
-        stream<record{}, error> resultStream = self.db->query("SELECT * FROM catalog");
-        // Convert the stream to a table.
-        table<record{}> tbl = check resultStream.toTable();
-        // Convert the table to a json.
-        json jsonPayload = tbl.toJson();
-        return jsonPayload;
+    resource function get catalog() returns Catelog[]|error {
+        Catelog[] catalogs = [];
+        stream<Catelog, sql:Error?> resultStream = self.db->query(`SELECT * FROM catalog`);
+       
+        
+        check from Catelog catalog in resultStream
+        do {
+            catalogs.push(catalog);
+        };
+        check resultStream.close();
+        return catalogs;
     }
 }
