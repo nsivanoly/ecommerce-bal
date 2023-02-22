@@ -1,7 +1,7 @@
 import ballerinax/mysql.driver as _;
 import ballerina/sql;
 import ballerinax/mysql;
-import ballerina/io;
+// import ballerina/io;
 import ballerina/http;
 
 type Catelog record {
