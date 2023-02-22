@@ -55,7 +55,8 @@ service /petstore on new http:Listener(8888) {
     private final mysql:Client db;
 
     function init() returns error? {
-        self.db = check new ("localhost", "root", "root", "siva_db", 3306);
+        // self.db = check new ("localhost", "root", "root", "siva_db", 3306);
+        self.db = check new ("sahackathon.mysql.database.azure.com", "choreo", "wso2!234", "siva_db", 3306, connectionPool={maxOpenConnections: 3});
     }
     
     resource function get catalog() returns Catelog[]|error {
