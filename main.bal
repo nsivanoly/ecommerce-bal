@@ -55,17 +55,13 @@ service /petstore on new http:Listener(8888) {
     private final mysql:Client db;
 
     function init() returns error? {
-        // Initiate the mysql client at the start of the service. This will be used
-        // throughout the lifetime of the service.
         self.db = check new ("localhost", "root", "root", "siva_db", 3306);
     }
-
-    // function get catalog() from the catalog table and return json
+    
     resource function get catalog() returns Catelog[]|error {
         Catelog[] catalogs = [];
         stream<Catelog, sql:Error?> resultStream = self.db->query(`SELECT * FROM catalog`);
-       
-        
+
         check from Catelog catalog in resultStream
         do {
             catalogs.push(catalog);
