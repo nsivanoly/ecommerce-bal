@@ -58,7 +58,7 @@ service /petstore on new http:Listener(8888) {
         // self.db = check new ("localhost", "root", "root", "siva_db", 3306);
         self.db = check new ("sahackathon.mysql.database.azure.com", "choreo", "wso2!234", "siva_db", 3306, connectionPool={maxOpenConnections: 3});
     }
-    
+
     resource function get catalog() returns Catelog[]|error {
         Catelog[] catalogs = [];
         stream<Catelog, sql:Error?> resultStream = self.db->query(`SELECT * FROM catalog`);
@@ -70,4 +70,10 @@ service /petstore on new http:Listener(8888) {
         check resultStream.close();
         return catalogs;
     }
+    
+    // graphql resource returns all catalog basede on the queey filed catalog
+    
+
+    
+    
 }
